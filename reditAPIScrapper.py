@@ -84,6 +84,16 @@ def scrap_reddit(headers, client, collection):
                 headers=headers,
                 params=params)
         insert_response(res, client, collection)
+        res = requests.get(
+                "https://oauth.reddit.com/r/worldnews/top/?t=hour",
+                headers=headers,
+                params=params)
+        insert_response(res, client, collection)
+        res = requests.get(
+                "https://oauth.reddit.com/r/technology/top/?t=hour",
+                headers=headers,
+                params=params)
+        insert_response(res, client, collection)
     except ValueError as err:
         logging.warning(f"Error - 106: '{err}'")
 
