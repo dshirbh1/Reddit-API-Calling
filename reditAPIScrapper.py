@@ -36,7 +36,7 @@ def insert_response(res, client, collection):
         print(subR['data']['title'], " ", datetime.fromtimestamp(subR['data']['created_utc']))
     
     # Load the response data to MongoDB
-    # collection.insert_one(json.loads(subreddit.decode("utf-8")))
+        collection.insert_one(subR['data'])
 
 def auth_api():
     # authenticate API
@@ -69,13 +69,21 @@ def scrap_reddit(headers, client, collection):
     try:
         # initialize dataframe and parameters for pulling data in loop
         params = {"limit": 100}
-        for i in range(3):
-            res = requests.get(
-                "https://oauth.reddit.com/r/news/new",
+        res = requests.get(
+                "https://oauth.reddit.com/r/news/top/?t=hour",
                 headers=headers,
-                params=params,
-            )
-            new_df = insert_response(res, client, collection)
+                params=params)
+        insert_response(res, client, collection)
+        res = requests.get(
+                "https://oauth.reddit.com/r/politics/top/?t=hour",
+                headers=headers,
+                params=params)
+        insert_response(res, client, collection)
+        res = requests.get(
+                "https://oauth.reddit.com/r/sports/top/?t=hour",
+                headers=headers,
+                params=params)
+        insert_response(res, client, collection)
     except ValueError as err:
         logging.warning(f"Error - 106: '{err}'")
 
@@ -83,18 +91,18 @@ def scrap_reddit(headers, client, collection):
 def main():
     headers = auth_api()
     client, collection = create_server_connection()
-    while 1:
-        try:
-            scrap_reddit(headers, client, collection)
-            for remaining in range(60, 0, -1):
-                sys.stdout.write("\r")
-                sys.stdout.write(
-                    "{:2d} seconds remaining for next Reddit pull".format(remaining)
-                )
-                sys.stdout.flush()
-                time.sleep(1)
-        except ValueError as err:
-            logging.warning(f"Error - 94: '{err}'")
+    try:
+        scrap_reddit(headers, client, collection)
+            #for remaining in range(60, 0, -1):
+                #sys.stdout.write("\r")
+                #sys.stdout.write(
+                    #"{:2d} seconds remaining for next Reddit pull".format(remaining)
+                #)
+                #sys.stdout.flush()
+                #time.sleep(1)
+                #db = 0
+    except ValueError as err:
+        logging.warning(f"Error - 94: '{err}'")
     close_server_connection(client)
 
 
