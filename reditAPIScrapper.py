@@ -94,6 +94,64 @@ def scrap_reddit(headers, client, collection):
                 headers=headers,
                 params=params)
         insert_response(res, client, collection)
+        
+        res = requests.get(
+                "https://oauth.reddit.com/r/anythinggoesnews/top/?t=hour",
+                headers=headers,
+                params=params)
+        insert_response(res, client, collection)
+        res = requests.get(
+                "https://oauth.reddit.com/r/inthenews/top/?t=hour",
+                headers=headers,
+                params=params)
+        insert_response(res, client, collection)
+        res = requests.get(
+                "https://oauth.reddit.com/r/nottheonion/top/?t=hour",
+                headers=headers,
+                params=params)
+        insert_response(res, client, collection)
+        res = requests.get(
+                "https://oauth.reddit.com/r/offbeat/top/?t=hour",
+                headers=headers,
+                params=params)
+        insert_response(res, client, collection)
+
+        res = requests.get(
+                "https://oauth.reddit.com/r/onthescene/top/?t=hour",
+                headers=headers,
+                params=params)
+        insert_response(res, client, collection)
+        res = requests.get(
+                "https://oauth.reddit.com/r/qualitynews/top/?t=hour",
+                headers=headers,
+                params=params)
+        insert_response(res, client, collection)
+        res = requests.get(
+                "https://oauth.reddit.com/r/thenews/top/?t=hour",
+                headers=headers,
+                params=params)
+        insert_response(res, client, collection)
+        res = requests.get(
+                "https://oauth.reddit.com/r/upliftingnews/top/?t=hour",
+                headers=headers,
+                params=params)
+        insert_response(res, client, collection)
+        
+        res = requests.get(
+                "https://oauth.reddit.com/r/Full_news/top/?t=hour",
+                headers=headers,
+                params=params)
+        insert_response(res, client, collection)
+        res = requests.get(
+                "https://oauth.reddit.com/r/uncensorednews/top/?t=hour",
+                headers=headers,
+                params=params)
+        insert_response(res, client, collection)
+        res = requests.get(
+                "https://oauth.reddit.com/r/neutralnews/top/?t=hour",
+                headers=headers,
+                params=params)
+        insert_response(res, client, collection)
     except ValueError as err:
         logging.warning(f"Error - 106: '{err}'")
 
