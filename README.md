@@ -1,2 +1,2 @@
 # RedditScrapper
-This is a scrapper that sends requests to reddit every 1 min
+This is a scrapper that sends 14 requests at a time. Send the requests after every hour to avoid a repitition.
