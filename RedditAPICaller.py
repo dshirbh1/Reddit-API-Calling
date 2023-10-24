@@ -1,6 +1,6 @@
 import sys
 import os
-import datetime
+from datetime import datetime
 import requests
 from config.config import ConfigMongo, ConfigReddit
 import pymongo
@@ -48,9 +48,10 @@ def closeServerConnection(client):
 
 #Function to convert responses to format to insert into the DB
 def insertResponses(res, client, collection):
-    subreddit = res.json()['data']['childres']
+    #print(res.json()['data']['dist'])
+    subreddit = res.json()['data']['children']
     for subR in subreddit:
-        print(subR['data']['title'], " ", datetime.fromtimestamp(subR['data']['created_utc']))
+        #print(subR['data']['title'], " ", datetime.fromtimestamp(subR['data']['created_utc']))
         collection.insert_one(subR['data'])
 
 #Authenticate API by providing token and other details
