@@ -1,13 +1,11 @@
-class SettingsReddit:
-    username = "*****"
-    password = "********"
+class ConfigReddit:
+    username = "dshirbh8"
+    password = "SocialMedia"
+creds_reddit = ConfigReddit()
 
-creds_reddit = SettingsReddit()
-
-class SettingsMongo:
+class ConfigMongo:
     host = "128.226.29.107:27017"
     port = 27017
-    database = "****"
-    collection = "******"
-    
-creds_mongodb = SettingsMongo()
+    database = "social_media_db"
+    collection = "reddit_api"
+creds_mongodb = ConfigMongo()

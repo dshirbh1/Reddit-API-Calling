@@ -1,6 +1,3 @@
-from .config import creds_reddit, creds_mongodb
+from .config import ConfigMongo, ConfigReddit
 
-__all__ = [
-    "creds_reddit",
-    "creds_mongodb",
-]
+__all__ = ["ConfigMongo", "ConfigReddit"]
