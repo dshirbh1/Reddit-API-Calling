@@ -40,7 +40,7 @@ def main():
     # Connect to MongoDB
     client = pymongo.MongoClient(ConfigMongo.host, ConfigMongo.port)
     db = client[ConfigMongo.database]
-    collection = db[ConfigMongo.collection]
+    collection = db[ConfigMongo.collectionNYTimes]
     while True:
         for endpoint, source in endpoints.items():
             data = fetch_data(endpoint, source)
