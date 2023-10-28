@@ -1,2 +1,7 @@
 # RedditScrapper
-This is a scrapper that sends 15 requests at a time. Send the requests after every hour to avoid a repitition.
+Running Reddit API calling file:
+"python3 RedditAPICaller.py"
+
+
+Running NYTimes API calling file:
+"python3 NYTimesAPICaller.py"
