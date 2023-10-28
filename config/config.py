@@ -8,4 +8,5 @@ class ConfigMongo:
     port = 27017
     database = "social_media_db"
     collection = "reddit_api"
+    collectionNYTimes = "NY_Times"
 creds_mongodb = ConfigMongo()
