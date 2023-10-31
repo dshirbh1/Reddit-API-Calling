@@ -64,13 +64,15 @@ def authAPI():
 
 #Call the apis one by one
 def readCollection(collection, collectionComments):
-    redditData = collection.find()
-    for r in redditData:
-        print(r)
+    redditData = collection.find_one()
+    print(redditData)
+    #for r in redditData:
+        #print(r)
 
-    redditData = collectionComments.find()
-    for r in redditData:
-        print(r)
+    redditData = collectionComments.find_one()
+    print(redditData)
+    #for r in redditData:
+        #print(r)
 
 def main():
     client, collection, collectionComments = createServerConnection()

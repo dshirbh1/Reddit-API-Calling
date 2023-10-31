@@ -27,16 +27,19 @@ def insertResponses(res, client, collection, collectionComments,headers):
     subreddit = res.json()['data']['children']
     for subR in subreddit:
         #print(subR['data']['title'], " ", datetime.fromtimestamp(subR['data']['created_utc']))
-        collection.insert_one(subR['data'] + datetime.now())
+        subR['data']["dateTime"] = str(datetime.now())
+        collection.insert_one(subR['data'])
 
         #Get the comments with that article
-        id = subR['permalink']
+        id = subR['data']['permalink']
         params = {"limit" : 100}
-        childs = requests.get("https://oauth.reddit.com/r/politics/comments/" + id, headers=headers,
+        print("https://oauth.reddit.com" + id)
+        childs = requests.get("https://oauth.reddit.com" + id, headers=headers,
                 params=params)
         childComments = childs.json()[1]['data']['children']
         for every in childComments:
-            collectionComments.insert_one(every['data'] + datetime.now())
+            every['data']['datetime'] = str(datetime.now())
+            collectionComments.insert_one(every['data'])
 
 
 #Authenticate API by providing token and other details
