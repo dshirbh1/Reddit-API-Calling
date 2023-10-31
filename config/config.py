@@ -7,6 +7,6 @@ class ConfigMongo:
     host = "128.226.29.107:27017"
     port = 27017
     database = "social_media_db"
-    collection = "reddit_api"
-    collectionNYTimes = "NY_Times"
+    collectionRedditDates = "Reddit_Dates"
+    collectionCommentsHour = "Reddit_Comments_Hour"
 creds_mongodb = ConfigMongo()
