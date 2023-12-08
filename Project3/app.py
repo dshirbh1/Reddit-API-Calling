@@ -1,5 +1,4 @@
 from flask import Flask, render_template
-import plot  # Import your analysis logic
 import base64
 from io import BytesIO
 
