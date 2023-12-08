@@ -60,7 +60,7 @@ def plotting(collection):
     # Display the plot
     plt.show()
 
-def analysis1():
+def run_analysis1():
     client, collection = createServerConnection()
     plotting(collection)
     closeServerConnection(client)
