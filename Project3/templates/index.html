@@ -1,17 +1,171 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Reddit and NYTimes Toxicity Analysis</title>
-</head>
+    <head>
+        <title>Reddit and NYTimes Analysis</title>
+        <style>
+            /* CSS for tabs and content */
+            .tab {
+                overflow: hidden;
+                border: 1px solid #ccc;
+                background-color: #007bff; /* Changed to a blue color */
+            }
+            .tab button {
+                background-color: inherit;
+                float: left;
+                border: none;
+                outline: none;
+                cursor: pointer;
+                padding: 14px 16px;
+                transition: 0.3s;
+                color: white; /* Text color changed to white for better contrast */
+            }
+            .tab button.active {
+                background-color: #0056b3; /* Darker shade of blue for active tab */
+                color: #fff;
+            }
+            .tab button:hover {
+                background-color: #0056b3; /* Darker shade of blue on hover */
+            }
+            .tabcontent1 {
+                display: none;
+                padding: 6px 12px;
+                border: 1px solid #ccc;
+                border-top: none;
+                background-color: #f1f1f1; /* Lighter background for content */
+            }
+            .tabcontent2 {
+                display: none;
+                padding: 6px 12px;
+                border: 1px solid #ccc;
+                border-top: none;
+                background-color: #f1f1f1; /* Lighter background for content */
+            }
+            .analysis-section {
+                margin-bottom: 20px;
+                background-color: #f8f9fa; /* Light background for each section */
+                padding: 10px;
+                border-radius: 5px; /* Rounded borders for sections */
+            }
+            .analysis-img {
+                width: 100%;
+                height: auto;
+                border-radius: 5px; /* Rounded borders for images */
+            }
+            h2, h3 {
+                color: #343a40; /* Dark color for headers */
+            }
+            .header {
+            text-align: center;
+            margin: 20px 0;
+            color: #007bff;
+            }
+            .authors {
+                background-color: #f8f9fa;
+                padding: 10px;
+                text-align: center;
+                margin-top: 30px;
+                font-size: 1em;
+                color: #343a40;
+            }
+        </style>
+    </head>
 <body>
-    <h1>Analysis 1</h1>
+
+    <div class="header">
+        <h1>Reddit and NYTimes Toxicity Measurement Analysis</h1>
+    </div>
     
-    <!-- Reference your static image here -->
-    <img src="{{ url_for('static', filename='picture/analysis1.png') }}" alt="Plot Image">
-    <h1>Analysis 2</h1>
+    <div class="analysis-section">
+        <h2>Comparative Analysis of Toxicity Scores Over Topics</h2>
+        <div class="tab">
+            <button class="tablinks1" onclick="openTabAnalysis1(event, 'Politics')" id="defaultOpenAnalysis1">Politics</button>
+            <button class="tablinks1" onclick="openTabAnalysis1(event, 'News')">News</button>
+            <button class="tablinks1" onclick="openTabAnalysis1(event, 'Entertainment')">Entertainment</button>
+        </div>
+        <div id="Politics" class="tabcontent1">
+            <h3>Politics</h3>
+            <div class="plot-container">
+                <iframe src="{{ url_for('static', filename='plot/analysis1_plot.html') }}" width="100%" height="600px"></iframe>
+            </div>
+        </div>
+        <div id="News" class="tabcontent1">
+            <h3>News</h3>
+            <img src="{{ url_for('static', filename='picture/analysis3.png') }}" class="analysis-img">
+        </div>
+        <div id="Entertainment" class="tabcontent1">
+            <h3>Entertainment</h3>
+            <img src="{{ url_for('static', filename='picture/analysis4.png') }}" class="analysis-img">
+        </div>
+    </div>
     
-    <!-- Reference your static image here -->
-    <img src="{{ url_for('static', filename='picture/analysis2.png') }}" alt="Plot Image">
+    <div class="analysis-section">
+        <h2>Distribution of Toxicity Scores for Reddit and NYTimes</h2>
+        <div class="tab">
+            <button class="tablinks2" onclick="openTabAnalysis2(event, 'Reddit')" id="defaultOpenAnalysis2">Reddit</button>
+            <button class="tablinks2" onclick="openTabAnalysis2(event, 'NYTimes')">NYTimes</button>
+        </div>
+        <div id="Reddit" class="tabcontent2">
+            <h3>Reddit</h3>
+            <img src="{{ url_for('static', filename='picture/analysis2.png') }}" class="analysis-img">
+        </div>
+        <div id="NYTimes" class="tabcontent2">
+            <h3>NYTimes</h3>
+            <img src="{{ url_for('static', filename='picture/analysis2.png') }}" class="analysis-img">
+        </div>
+    </div>
+    
+    <div class="authors">
+        <h3>Authors</h3>
+        <p>Gaurav Pachpande </p>
+        <p>Devashri Shirbhate</p>
+        <p>Ninad Deshmukh</p>
+    </div>
+    
+    <script>
+    function openTabAnalysis1(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent1");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks1");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+    
+
+    function openTabAnalysis2(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent2");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks2");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+    
+    // Function to open default tabs
+    function openDefaultTabs() {
+        // Open the Politics tab in Analysis 1
+        document.getElementById('Politics').style.display = 'block';
+        document.getElementById('defaultOpenAnalysis1').className += ' active';
+
+        // Open the Reddit tab in Analysis 2
+        document.getElementById('Reddit').style.display = 'block';
+        document.getElementById('defaultOpenAnalysis2').className += ' active';
+    }
+
+
+    // Call openDefaultTabs on window load
+    window.onload = openDefaultTabs;
+</script>
 
 </body>
 </html>
