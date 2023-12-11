@@ -2,9 +2,9 @@ import plotly
 import plotly.express as px
 import os
 
-def analysis1_run():
+def analysis1_run(topic):
     # Generate the plot
-    fig = px.line(x=[1, 2, 3], y=[1, 3, 2], title="Sample Plot")
+    fig = px.line(x=[1, 2, 3], y=[1, 3, 2], title=topic)
 
     # Create the directory if it doesn't exist
     output_dir = 'static/plot'

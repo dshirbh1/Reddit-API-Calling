@@ -33,17 +33,10 @@ def plotting(collection):
     date_counts = df['date'].value_counts().reset_index()
 
     # Set a date range
-    #start_date = (int64) pd.to_datetime('2023-11-01').date()
-    #end_date = (int64) pd.to_datetime('2023-11-14').date()
-    #start_date = pd.to_datetime('2023-11-01').values.astype('int64')
-    #end_date = pd.to_datetime('2023-11-14').values.astype('int64')
-    
-    #print(date_counts['date'].dtype)
-    #print("I am here")
-    #print(type(start_date), type(end_date))
-    #date_counts['date'] = pd.to_datetime(date_counts['date']).values.astype('int64')
+    start_date = pd.to_datetime('2023-11-01').date()
+    end_date = pd.to_datetime('2023-11-14').date()
 
-    #date_counts = date_counts[(date_counts['date'] >= start_date) & (date_counts['date'] <= end_date)]
+    date_counts = date_counts[(date_counts['date'] >= start_date) & (date_counts['date'] <= end_date)]
     date_counts.columns = ['Date', 'Count']
 
     # Sort the dates in chronological order

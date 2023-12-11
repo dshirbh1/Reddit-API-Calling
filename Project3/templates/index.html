@@ -3,6 +3,45 @@
     <head>
         <title>Reddit and NYTimes Analysis</title>
         <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                text-align: center;
+                padding: 20px;
+            }
+
+            form {
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                display: inline-block;
+            }
+
+            label {
+                color: #333;
+                font-size: 16px;
+                margin-right: 10px;
+            }
+
+            input[type="radio"] {
+                margin-right: 5px;
+            }
+
+            button {
+                background-color: #007bff;
+                color: white;
+                padding: 10px 15px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 16px;
+                margin-top: 10px;
+            }
+
+            button:hover {
+                background-color: #0056b3;
+            }
             /* CSS for tabs and content */
             .tab {
                 overflow: hidden;
@@ -33,13 +72,6 @@
                 border-top: none;
                 background-color: #f1f1f1; /* Lighter background for content */
             }
-            .tabcontent2 {
-                display: none;
-                padding: 6px 12px;
-                border: 1px solid #ccc;
-                border-top: none;
-                background-color: #f1f1f1; /* Lighter background for content */
-            }
             .analysis-section {
                 margin-bottom: 20px;
                 background-color: #f8f9fa; /* Light background for each section */
@@ -55,17 +87,18 @@
                 color: #343a40; /* Dark color for headers */
             }
             .header {
+            background-color: #4831D4;
             text-align: center;
             margin: 20px 0;
-            color: #007bff;
+            color: #f9f9f9;
             }
             .authors {
-                background-color: #f8f9fa;
+                background-color: #CCF381;
                 padding: 10px;
                 text-align: center;
                 margin-top: 30px;
                 font-size: 1em;
-                color: #343a40;
+                color: #000000;
             }
         </style>
     </head>
@@ -74,13 +107,37 @@
     <div class="header">
         <h1>Reddit and NYTimes Toxicity Measurement Analysis</h1>
     </div>
-    
-    <div class="analysis-section">
-        <h2>Comparative Analysis of Toxicity Scores Over Topics</h2>
+    <div class="authors">
+        <p>Comparative Analysis of Toxicity Scores Over Topics</p>
+    </div>
+    <!-- <h2>Comparative Analysis of Toxicity Scores Over Topics</h2> -->
+       
+    <form action="/submit-analysis" method="post">
+        <input type="radio" id="politics" name="topic" value="Politics">
+        <label for="politics">Politics</label><br>
+        <input type="radio" id="news" name="topic" value="News">
+        <label for="news">News</label><br>
+        <input type="radio" id="entertainment" name="topic" value="Entertainment">
+        <label for="entertainment">Entertainment</label><br>
+        <button type="submit">Analyze Topic</button>
+    </form>
+     
+    <div class="plot-container">
+        <h4>{{ analysis_result }}</h4>
+        <iframe src="{{ url_for('static', filename='plot/analysis1_plot.html') }}" width="100%" height="600px"></iframe>
+    </div>
+
+    <!-- <div class="analysis-section">
         <div class="tab">
-            <button class="tablinks1" onclick="openTabAnalysis1(event, 'Politics')" id="defaultOpenAnalysis1">Politics</button>
-            <button class="tablinks1" onclick="openTabAnalysis1(event, 'News')">News</button>
-            <button class="tablinks1" onclick="openTabAnalysis1(event, 'Entertainment')">Entertainment</button>
+            <form action="/submit-analysis" method="post">
+
+                <input type="hidden" name="topic" value="Politics">
+                <button class="tablinks1" onclick="openTabAnalysis1(event, 'Politics')" id="defaultOpenAnalysis1" type="submit">Politics</button>
+                <input type="hidden" name="topic" value="News">
+                <button class="tablinks1" onclick="openTabAnalysis1(event, 'News')" type="submit">News</button>
+                <input type="hidden" name="topic" value="Entertainment">
+                <button class="tablinks1" onclick="openTabAnalysis1(event, 'Entertainment')" type="submit">Entertainment</button>
+            </form>
         </div>
         <div id="Politics" class="tabcontent1">
             <h3>Politics</h3>
@@ -96,9 +153,22 @@
             <h3>Entertainment</h3>
             <img src="{{ url_for('static', filename='picture/analysis4.png') }}" class="analysis-img">
         </div>
+        <div class="analysis-output">
+            <h3>{{analysis_result}}</h3>
+            <img src="{{ url_for('static', filename='picture/analysis4.png') }}" alt="Analysis Result">
+        </div>
+    </div> -->
+    <div class="authors">
+        <p>Distribution of Toxicity Scores for Reddit and NYTimes</p>
     </div>
+    <!-- <h2>Distribution of Toxicity Scores for Reddit and NYTimes</h2> -->
+    <h3>Reddit</h3>
+    <img src="{{ url_for('static', filename='picture/analysis2.png') }}" class="analysis-img">
+    <h3>NYTimes</h3>
+    <img src="{{ url_for('static', filename='picture/analysis2.png') }}" class="analysis-img">
+         
     
-    <div class="analysis-section">
+    <!-- <div class="analysis-section">
         <h2>Distribution of Toxicity Scores for Reddit and NYTimes</h2>
         <div class="tab">
             <button class="tablinks2" onclick="openTabAnalysis2(event, 'Reddit')" id="defaultOpenAnalysis2">Reddit</button>
@@ -112,16 +182,16 @@
             <h3>NYTimes</h3>
             <img src="{{ url_for('static', filename='picture/analysis2.png') }}" class="analysis-img">
         </div>
-    </div>
+    </div> -->
     
     <div class="authors">
-        <h3>Authors</h3>
+        <p>Authors</p>
         <p>Gaurav Pachpande </p>
         <p>Devashri Shirbhate</p>
         <p>Ninad Deshmukh</p>
     </div>
     
-    <script>
+    <!-- <script>
     function openTabAnalysis1(evt, tabName) {
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent1");
@@ -133,39 +203,45 @@
         tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
     document.getElementById(tabName).style.display = "block";
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/submit-analysis", true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8"); // Set Content-Type to application/json
+    xhr.send(JSON.stringify({topic: tabName}));
+
     evt.currentTarget.className += " active";
-}
+} -->
     
 
-    function openTabAnalysis2(evt, tabName) {
-    var i, tabcontent, tablinks;
-    tabcontent = document.getElementsByClassName("tabcontent2");
-    for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-    }
-    tablinks = document.getElementsByClassName("tablinks2");
-    for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-    document.getElementById(tabName).style.display = "block";
-    evt.currentTarget.className += " active";
-}
+<!-- //     function openTabAnalysis2(evt, tabName) {
+//     var i, tabcontent, tablinks;
+//     tabcontent = document.getElementsByClassName("tabcontent2");
+//     for (i = 0; i < tabcontent.length; i++) {
+//         tabcontent[i].style.display = "none";
+//     }
+//     tablinks = document.getElementsByClassName("tablinks2");
+//     for (i = 0; i < tablinks.length; i++) {
+//         tablinks[i].className = tablinks[i].className.replace(" active", "");
+//     }
+//     document.getElementById(tabName).style.display = "block";
+//     evt.currentTarget.className += " active";
+// } -->
     
-    // Function to open default tabs
-    function openDefaultTabs() {
-        // Open the Politics tab in Analysis 1
-        document.getElementById('Politics').style.display = 'block';
-        document.getElementById('defaultOpenAnalysis1').className += ' active';
+    <!-- // Function to open default tabs
+    // function openDefaultTabs() {
+    //     // Open the Politics tab in Analysis 1
+    //     document.getElementById('Politics').style.display = 'block';
+    //     document.getElementById('defaultOpenAnalysis1').className += ' active';
 
-        // Open the Reddit tab in Analysis 2
-        document.getElementById('Reddit').style.display = 'block';
-        document.getElementById('defaultOpenAnalysis2').className += ' active';
-    }
+    //     // Open the Reddit tab in Analysis 2
+    //     document.getElementById('Reddit').style.display = 'block';
+    //     document.getElementById('defaultOpenAnalysis2').className += ' active';
+    // } -->
 
 
-    // Call openDefaultTabs on window load
-    window.onload = openDefaultTabs;
-</script>
+    <!-- // Call openDefaultTabs on window load
+    window.onload = openDefaultTabs; -->
+<!-- </script> -->
 
 </body>
 </html>
