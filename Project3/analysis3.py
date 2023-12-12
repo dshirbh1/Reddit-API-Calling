@@ -22,6 +22,15 @@ def get_data_from_mongodb(database_name, collection_name):
     data = list(collection.find({}))
     return pd.DataFrame(data)
 
+def parse_json(x):
+    if isinstance(x, str):
+        try:
+            return json.loads(x)
+        except ValueError:
+            return None
+    else:
+        return None
+
 def filter_category(text, category, source):
     keywords = {
         'Politics': ['politics', 'government', 'election', 'democracy', 'republican', 'democrat', 'senate', 'congress'],
@@ -56,7 +65,7 @@ def run_combined_analysis(category):
     # nytimes_df['ModerateHateSpeech'] = nytimes_df['ModerateHateSpeech'].apply(parse_json)
     # nytimes_df = nytimes_df.join(pd.json_normalize(nytimes_df['ModerateHateSpeech'].dropna()))
     nytimes_df['confidence'] = pd.to_numeric(nytimes_df['confidence'], errors='coerce')
-    nytimes_data = process_data(nytimes_df, category, 'Title')
+    nytimes_data = process_data(nytimes_df, category, 'title')
 
     # Merging and plotting data
     plt.figure(figsize=(12, 6))
