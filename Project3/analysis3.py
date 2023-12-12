@@ -3,97 +3,83 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import json
 import os
-# MongoDB Connection Details
-DATABASE_NAME = "social_media_db"
-COLLECTION_NAME = "Reddit_Comments_Moderate_Hate_Speech"
 
-def get_data_from_mongodb():
+# MongoDB Connection Details
+REDDIT_DATABASE_NAME = "social_media_db"
+REDDIT_COLLECTION_NAME = "Reddit_Comments_Moderate_Hate_Speech"
+
+NYTIMES_DATABASE_NAME = "social_media_db"
+NYTIMES_COLLECTION_NAME = "modernhatespeechAPI_NYTimes"
+
+def get_data_from_mongodb(database_name, collection_name):
     """
     Connect to MongoDB and retrieve data from the specified collection.
     Returns a pandas DataFrame.
     """
     client = MongoClient("mongodb://localhost:27017/")
-    db = client[DATABASE_NAME]
-    collection = db[COLLECTION_NAME]
+    db = client[database_name]
+    collection = db[collection_name]
     data = list(collection.find({}))
     return pd.DataFrame(data)
 
-def parse_json(x):
-    if isinstance(x, str):
-        try:
-            return json.loads(x)
-        except ValueError:
-            return None
-    else:
-        return None
-
-def filter_category(text, category):
+def filter_category(text, category, source):
     keywords = {
         'Politics': ['politics', 'government', 'election', 'democracy', 'republican', 'democrat', 'senate', 'congress'],
         'Financial': ['finance', 'money', 'economy', 'stock', 'market', 'investment'],
         'Business': ['business', 'company', 'corporate', 'industry', 'enterprise'],
         'Sports': ['sports', 'football', 'basketball', 'soccer', 'tennis', 'olympics'],
         'Arts': ['art', 'music', 'painting', 'dance', 'literature', 'theater', 'film']
+        # Add other categories and keywords as needed
     }
     return any(keyword in text.lower() for keyword in keywords.get(category, []))
 
-def plot_graph_for_category(df, category):
-    df['is_category'] = df['Response'].apply(lambda x: filter_category(x, category))
+def process_data(df, category, column):
+    df['is_category'] = df[column].apply(lambda x: filter_category(x, category, column))
     df_category = df[df['is_category']]
     average_confidence_category = df_category.groupby(['Date', 'class'])['confidence'].mean().unstack()
+    return average_confidence_category
 
+def run_combined_analysis(category):
+    # Fetching and processing Reddit data
+    reddit_df = get_data_from_mongodb(REDDIT_DATABASE_NAME, REDDIT_COLLECTION_NAME)
+    reddit_df['TimeStamp'] = pd.to_datetime(reddit_df['TimeStamp'].str.slice(0, 19), format='%Y-%m-%d %H:%M:%S')
+    reddit_df['Date'] = reddit_df['TimeStamp'].dt.date
+    reddit_df['ModerateHateSpeech'] = reddit_df['ModerateHateSpeech'].apply(parse_json)
+    reddit_df = reddit_df.join(pd.json_normalize(reddit_df['ModerateHateSpeech'].dropna()))
+    reddit_df['confidence'] = pd.to_numeric(reddit_df['confidence'], errors='coerce')
+    reddit_data = process_data(reddit_df, category, 'Response')
+
+    # Fetching and processing NYTimes data
+    nytimes_df = get_data_from_mongodb(NYTIMES_DATABASE_NAME, NYTIMES_COLLECTION_NAME)
+    nytimes_df['TimeStamp'] = pd.to_datetime(nytimes_df['timestamp'])
+    nytimes_df['Date'] = nytimes_df['TimeStamp'].dt.date
+    # nytimes_df['ModerateHateSpeech'] = nytimes_df['ModerateHateSpeech'].apply(parse_json)
+    # nytimes_df = nytimes_df.join(pd.json_normalize(nytimes_df['ModerateHateSpeech'].dropna()))
+    nytimes_df['confidence'] = pd.to_numeric(nytimes_df['confidence'], errors='coerce')
+    nytimes_data = process_data(nytimes_df, category, 'Title')
+
+    # Merging and plotting data
     plt.figure(figsize=(12, 6))
-    legend_labels = []
+    if 'flag' in reddit_data.columns:
+        plt.plot(reddit_data['flag'], label='Reddit Flag', marker='o', color='red')
+    if 'normal' in reddit_data.columns:
+        plt.plot(reddit_data['normal'], label='Reddit Normal', marker='x', color='blue')
+    if 'flag' in nytimes_data.columns:
+        plt.plot(nytimes_data['flag'], label='NYTimes Flag', marker='^', color='green')
+    if 'normal' in nytimes_data.columns:
+        plt.plot(nytimes_data['normal'], label='NYTimes Normal', marker='s', color='purple')
 
-    if 'flag' in average_confidence_category.columns and not average_confidence_category['flag'].isnull().all():
-        plt.plot(average_confidence_category['flag'], label='Flag', marker='o')
-        legend_labels.append('Flag')
-
-    if 'normal' in average_confidence_category.columns and not average_confidence_category['normal'].isnull().all():
-        plt.plot(average_confidence_category['normal'], label='Normal', marker='x')
-        legend_labels.append('Normal')
-
-    if legend_labels:
-        plt.legend(legend_labels)
-
-    plt.title(f'Average Confidence per Date for Flag and Normal Classes in {category.capitalize()} Comments')
+    plt.title(f'Average Confidence per Date for Flag and Normal Classes in {category} - Reddit vs NYTimes')
     plt.xlabel('Date')
     plt.ylabel('Average Confidence')
+    plt.legend()
     plt.grid(True)
     plt.xticks(rotation=45)
     plt.tight_layout()
     output_path = 'static/picture/'
     os.makedirs(output_path, exist_ok=True)
-    output_file = os.path.join(output_path, 'analysis12.png')
+    output_file = os.path.join(output_path, f'combined_analysis_{category}.png')
     plt.savefig(output_file)
-    #plt.show()
 
-def run_analysis(category):
-    df = get_data_from_mongodb()
-    #print(df)
-    # Parsing JSON strings in the 'ModerateHateSpeech' column
-    df['ModerateHateSpeech'] = df['ModerateHateSpeech'].apply(parse_json)
-    json_columns = pd.json_normalize(df['ModerateHateSpeech'].dropna())
-    df = df.join(json_columns)
-
-    # Converting 'TimeStamp' to datetime and extracting date
-    #df['TimeStamp'] = pd.to_datetime(df['TimeStamp'], errors='coerce')
-    df['TimeStamp'] = pd.to_datetime(df['TimeStamp'].str.slice(0, 19), format='%Y-%m-%d %H:%M:%S')
-
-    #print(df['TimeStamp']) 
-    # Check if the 'TimeStamp' is timezone aware and convert to UTC
-    #if df['TimeStamp'].dt.tz is not None:
-        #df['TimeStamp'] = df['TimeStamp'].dt.tz_convert('UTC')
-    #else:
-        #df['TimeStamp'] = df['TimeStamp'].dt.tz_localize(None).dt.tz_convert('UTC')
-    
-    df['Date'] = df['TimeStamp'].dt.date
-
-    # Ensuring the 'confidence' column is in numeric format
-    df['confidence'] = pd.to_numeric(df['confidence'], errors='coerce')
-
-    plot_graph_for_category(df, category)
-
-# This part ensures that the script can be imported without executing the main function
 if __name__ == "__main__":
-    run_analysis("politics")  # Example category
+    run_combined_analysis("Politics")
