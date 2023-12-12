@@ -2,14 +2,14 @@ from flask import Flask, render_template, request, jsonify
 # import plot  # Import your analysis logic
 # import base64
 # from io import BytesIO
-import analysis2
+import analysis3
 
 app = Flask(__name__)
 
 @app.route('/', methods=['GET'])
 def index():
     topic = "Politics"
-    analysis2.analysis1_run(topic)
+    #analysis3.run_analysis(topic)
     # Get Matplotlib plot from your analysis module
     return render_template('index.html', analysis_result=topic)
 
@@ -19,7 +19,7 @@ def submit_analysis():
     topic = request.form['topic']
 
     # Call your analysis function with the 'topic' variable
-    analysis2.analysis1_run(topic)
+    #analysis1.run_analysis(topic)
     # For example, analysis2.analysis1_run(topic)
     # Save the result and handle as needed
     # return render_template('index.html')  # Pass topic to results template
