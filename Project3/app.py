@@ -2,15 +2,16 @@ from flask import Flask, render_template, request, jsonify
 # import plot  # Import your analysis logic
 # import base64
 # from io import BytesIO
-import analysis3
+import ComparativeAnalysisOverTopic
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET'])
+@app.route('/')
 def index():
     topic = "Politics"
-    #analysis3.run_analysis(topic)
+    ComparativeAnalysisOverTopic.ComparativeAnalysis(topic)
     # Get Matplotlib plot from your analysis module
+    #return "Hello World"
     return render_template('index.html', analysis_result=topic)
 
 
@@ -19,7 +20,7 @@ def submit_analysis():
     topic = request.form['topic']
 
     # Call your analysis function with the 'topic' variable
-    #analysis1.run_analysis(topic)
+    ComparativeAnalysisOverTopic.ComparativeAnalysis(topic)
     # For example, analysis2.analysis1_run(topic)
     # Save the result and handle as needed
     # return render_template('index.html')  # Pass topic to results template

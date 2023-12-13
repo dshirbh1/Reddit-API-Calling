@@ -115,16 +115,20 @@
     <form action="/submit-analysis" method="post">
         <input type="radio" id="politics" name="topic" value="Politics">
         <label for="politics">Politics</label><br>
-        <input type="radio" id="news" name="topic" value="News">
-        <label for="news">News</label><br>
-        <input type="radio" id="entertainment" name="topic" value="Entertainment">
-        <label for="entertainment">Entertainment</label><br>
+        <input type="radio" id="financial" name="topic" value="Financial">
+        <label for="financial">Financial</label><br>
+        <input type="radio" id="business" name="topic" value="Business">
+        <label for="business">Business</label><br>
+        <input type="radio" id="sports" name="topic" value="Sports">
+        <label for="sports">Sports</label><br>
+        <input type="radio" id="arts" name="topic" value="Arts">
+        <label for="arts">Arts</label><br>
         <button type="submit">Analyze Topic</button>
     </form>
      
     <div class="plot-container">
         <h4>{{ analysis_result }}</h4>
-        <img src="{{ url_for('static', filename='picture/analysis12.png') }}" class="analysis-img">
+        <img src="{{ url_for('static', filename='picture/ComparativeAnalysis.png') }}" class="analysis-img">
     </div>
 
     <!-- <div class="analysis-section">
