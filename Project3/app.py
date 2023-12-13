@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, jsonify
 # import base64
 # from io import BytesIO
 import ComparativeAnalysisOverTopic
-
+import DistributionofToxicityScoresforReddit
 app = Flask(__name__)
 
 @app.route('/')
@@ -12,6 +12,7 @@ def index():
     ComparativeAnalysisOverTopic.ComparativeAnalysis(topic)
     # Get Matplotlib plot from your analysis module
     #return "Hello World"
+    DistributionofToxicityScoresforReddit.run_reddit_analysis()
     return render_template('index.html', analysis_result=topic)
 
 
@@ -24,6 +25,7 @@ def submit_analysis():
     # For example, analysis2.analysis1_run(topic)
     # Save the result and handle as needed
     # return render_template('index.html')  # Pass topic to results template
+    DistributionofToxicityScoresforReddit.run_reddit_analysis()
     return render_template('index.html', analysis_result=topic)
 
 
